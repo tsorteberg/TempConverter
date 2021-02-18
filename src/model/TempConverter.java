@@ -20,6 +20,12 @@ public class TempConverter {
 		super();
 	}
 	
+	/**
+	 * Primary constructor.
+	 * @param userTempInitial: Required double.
+	 * @param userScaleInitial: Required string.
+	 * @param userScaleFinal: Required string.
+	 */
 	public TempConverter(double userTempInitial, String userScaleInitial, String userScaleFinal) {
 		super();
 		setUserTemp(userTempInitial);
@@ -90,35 +96,88 @@ public class TempConverter {
 	 * Helper function to convert temperature.
 	 */
 	private void convertTemp() {
-		if (userScaleInitial.equals(userScaleFinal)) {
-			userTempFinal = userTempInitial;
-		} 
-		else if (userScaleInitial.equals("F")) {
-			if (userScaleFinal.equals("C")) {
-				userTempFinal = (userTempInitial - 32) * .5556;
+		// Constant variable declaration and initialization.
+		final double absZeroF = -459.67;
+		final double absZeroC = -273.15;
+		final double absZeroK = 0;
+		
+		// Convert from Farhenheit.
+		if (userScaleInitial.equals("F") && userTempInitial >= absZeroF) {
+			if (userScaleFinal.equals("F")) {
+				userTempFinal = userTempInitial;
+			}
+			else if (userScaleFinal.equals("C")) {
+				userTempFinal = ((userTempInitial - 32) * 5) / 9;
 			} 
-			else if (userScaleFinal.contentEquals("K") ) {
-				userTempFinal = ((userTempInitial - 32) * .5556) + 273.15;
+			else if (userScaleFinal.equals("K") ) {
+				userTempFinal = (((userTempInitial - 32) * 5) / 9) + 273.15;
 			}
 		}
-		else if (userScaleInitial.equals("C")) {
+		// Account for absolute zero.
+		else if (userScaleInitial.equals("F") && userTempInitial < absZeroF) {
+			if (userScaleFinal.equals("F")) {
+				userTempFinal = absZeroF;
+			}
+			else if (userScaleFinal.equals("C")) {
+				userTempFinal = absZeroC;
+			}
+			else if (userScaleFinal.contentEquals("K")) {
+				userTempFinal = absZeroK;
+			}
+		}
+		// Convert from Celsius.
+		else if (userScaleInitial.equals("C") && userTempInitial >= absZeroC) {
 			if (userScaleFinal.equals("F")) {
 				userTempFinal = (userTempInitial * 1.8) + 32;
+			}
+			else if (userScaleFinal.equals("C")) {
+				userTempFinal = userTempInitial;
 			}
 			else if (userScaleFinal.equals("K")) {
 				userTempFinal = userTempInitial + 273.15;
 			}
 		}
-		else if (userScaleInitial.equals("K")) {
+		// Account for absolute zero.
+		else if (userScaleInitial.equals("C") && userTempInitial < absZeroC) {
+			if (userScaleFinal.equals("F")) {
+				userTempFinal = absZeroF;
+			}
+			else if (userScaleFinal.equals("C")) {
+				userTempFinal = absZeroC;
+			}
+			else if (userScaleFinal.contentEquals("K")) {
+				userTempFinal = absZeroK;
+			}
+		}
+		// Convert from Kelvin.
+		else if (userScaleInitial.equals("K") && userTempInitial >= absZeroK) {
 			if (userScaleFinal.equals("F")) {
 				userTempFinal = ((userTempInitial - 273.15) * 1.8) + 32;
 			}
 			else if (userScaleFinal.equals("C")) {
 				userTempFinal = userTempInitial - 273.15;
 			}
+			else if (userScaleFinal.equals("K")) {
+				userTempFinal = userTempInitial;
+			}
+		}
+		// Account for absolute zero.
+		else if (userScaleInitial.equals("K") && userTempInitial < absZeroK) {
+			if (userScaleFinal.equals("F")) {
+				userTempFinal = absZeroF;
+			}
+			else if (userScaleFinal.equals("C")) {
+				userTempFinal = absZeroC;
+			}
+			else if (userScaleFinal.contentEquals("K")) {
+				userTempFinal = absZeroK;
+			}
 		}
 	}
 	
+	/**
+	 * Default toString() method.
+	 */
 	@Override
 	public String toString() {
 		return "Initial Temperature: " + String.format("%.2f", userTempInitial) + userScaleInitial + 

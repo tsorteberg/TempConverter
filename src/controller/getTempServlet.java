@@ -26,17 +26,23 @@ public class getTempServlet extends HttpServlet {
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		
 		// Local variable declaration and initialization.
 		String userTemp = request.getParameter("userTemp");
 		String userScaleInitial = request.getParameter("userScaleInitial");
 		String userScaleFinal = request.getParameter("userScaleFinal");
+		double numTemp = 0;
 		
-		// If field is left empty, set it to zero.
-		if (userTemp.isEmpty()) {
-			userTemp = "0";
+		// Input validation and exception handling.
+		try {
+			numTemp = Double.parseDouble(userTemp);
+		}
+		catch (Exception exception) {
+			numTemp = 0;
 		}
 		
-		TempConverter tempObject = new TempConverter(Double.parseDouble(userTemp),
+		// Instantiate TempConverter object.
+		TempConverter tempObject = new TempConverter(numTemp,
 												   userScaleInitial, userScaleFinal);
 		
 		request.setAttribute("tempObject", tempObject);
